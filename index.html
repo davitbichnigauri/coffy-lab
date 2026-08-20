@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ყავის ლაბი — შეუკვეთე შენი ყავა</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 44 44" width="38" height="38" aria-hidden="true">
+      <circle cx="22" cy="22" r="20" fill="#8a5a34"/>
+      <g transform="rotate(-24 22 22)">
+        <ellipse cx="22" cy="22" rx="8" ry="12" fill="#f6f1e7"/>
+        <path d="M22 10 q7 12 0 24" fill="none" stroke="#8a5a34" stroke-width="2.4" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <span class="brand-text"><strong>ყავის ლაბი</strong><small>COFFEE LAB</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="nav-btn active" href="index.html" id="navOrder">☕ შეკვეთა</a>
+    <a class="nav-btn" href="passport.html">📖 პასპორტი <span class="badge hidden" id="stampBadge"></span></a>
+    <a class="nav-btn" href="about.html">👋 ჩვენს შესახებ</a>
+    <a class="nav-btn" href="contact.html">📍 კონტაქტი</a>
+  </nav>
+  <div class="user-chip hidden" id="userChip"></div>
+</header>
+
+<main>
+
+  <!-- ================= შეკვეთის ვიზარდი ================= -->
+  <section id="view-order">
+    <ol class="steps" id="stepsBar">
+      <li data-step="1" class="active" role="button" tabindex="0"><span class="num">1</span><span class="lbl">ყავა</span></li>
+      <li data-step="2" role="button" tabindex="0"><span class="num">2</span><span class="lbl">ჭიქა</span></li>
+      <li data-step="3" role="button" tabindex="0"><span class="num">3</span><span class="lbl">შეჯამება</span></li>
+    </ol>
+
+    <div class="wizard">
+      <div class="panels">
+
+        <!-- ნაბიჯი 1: ყავა -->
+        <section class="panel" id="step1">
+          <h2>აირჩიე შენი ყავა</h2>
+
+          <h3 class="opt-title">ყავის სახეობა</h3>
+          <div class="coffee-grid" id="coffeeTypes"></div>
+
+          <div class="opt-row">
+            <div class="opt-col">
+              <h3 class="opt-title">მოცულობა</h3>
+              <div class="chip-group" id="volumeChips"></div>
+            </div>
+            <div class="opt-col">
+              <h3 class="opt-title">ესპრესოს შოტები</h3>
+              <div class="chip-group" id="shotChips"></div>
+            </div>
+            <div class="opt-col">
+              <h3 class="opt-title">ტემპერატურა</h3>
+              <div class="chip-group" id="tempChips"></div>
+            </div>
+          </div>
+
+          <h3 class="opt-title">რძე</h3>
+          <div class="chip-group" id="milkChips"></div>
+
+          <h3 class="opt-title">სიროფები <small class="hint">(რამდენიც გინდა)</small></h3>
+          <div class="chip-group" id="syrupChips"></div>
+
+          <h3 class="opt-title">დამატებები <small class="hint">(რამდენიც გინდა)</small></h3>
+          <div class="chip-group" id="extraChips"></div>
+
+          <h3 class="opt-title">შაქარი</h3>
+          <div class="sugar-row">
+            <input type="range" id="sugarRange" min="0" max="5" step="1" value="1" aria-label="შაქრის რაოდენობა">
+            <output id="sugarOut" for="sugarRange">1 კოვზი</output>
+          </div>
+
+          <div class="panel-nav">
+            <span></span>
+            <button type="button" class="btn primary" id="toStep2">გაგრძელება: ჭიქა →</button>
+          </div>
+        </section>
+
+        <!-- ნაბიჯი 2: ფინჯანი -->
+        <section class="panel hidden" id="step2">
+          <h2>მოირგე ჭიქა</h2>
+
+          <h3 class="opt-title">ჭიქის ფერი</h3>
+          <div class="swatch-row">
+            <div class="swatches" id="colorSwatches"></div>
+            <label class="custom-color">
+              <input type="color" id="customColor" value="#f3e5d0">
+              <span>სხვა ფერი</span>
+            </label>
+          </div>
+
+          <h3 class="opt-title">წარწერა ჭიქაზე <small class="hint">(უფასო პერსონალიზაცია 🎁)</small></h3>
+          <input type="text" id="cupTextInput" class="text-input" maxlength="18"
+                 placeholder="მაგ.: დილა მშვიდობისა ☀" autocomplete="off">
+          <p class="hint" id="cupTextCount">0 / 18 სიმბოლო</p>
+
+          <div class="opt-row">
+            <div class="opt-col">
+              <h3 class="opt-title">ხუფი</h3>
+              <div class="chip-group" id="lidChips"></div>
+            </div>
+            <div class="opt-col">
+              <h3 class="opt-title">საწრუპი</h3>
+              <div class="chip-group" id="strawChips"></div>
+            </div>
+          </div>
+
+          <div class="panel-nav">
+            <button type="button" class="btn ghost" id="backTo1">← უკან</button>
+            <button type="button" class="btn primary" id="toStep3">გაგრძელება: შეჯამება →</button>
+          </div>
+        </section>
+
+        <!-- ნაბიჯი 3: შეჯამება -->
+        <section class="panel hidden" id="step3">
+          <h2>შეკვეთის შეჯამება</h2>
+          <div id="summaryBox"></div>
+          <div class="panel-nav">
+            <button type="button" class="btn ghost" id="backTo2">← უკან</button>
+            <button type="button" class="btn primary big" id="placeOrderBtn">შეკვეთის გაფორმება ☕</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- გვერდითი პანელი: გადახედვა + ფასი -->
+      <aside class="sidebar">
+        <div class="preview-card">
+          <h3>შენი ჭიქა</h3>
+          <svg id="cupSvg" viewBox="0 0 220 300" role="img" aria-label="ჭიქის გადახედვა">
+            <defs>
+              <linearGradient id="shadeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#000" stop-opacity="0"/>
+                <stop offset="1" stop-color="#000" stop-opacity=".13"/>
+              </linearGradient>
+              <pattern id="strawStripes" width="9" height="9" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <rect width="9" height="9" fill="transparent"/>
+                <rect width="4.5" height="9" fill="#e05252" fill-opacity=".85"/>
+              </pattern>
+            </defs>
+            <ellipse cx="110" cy="286" rx="66" ry="8" fill="#000" opacity=".08"/>
+            <g id="steamG">
+              <path class="steam s1" d="M85 46 q6 -10 0 -20 q-5 -8 1 -14"/>
+              <path class="steam s2" d="M110 42 q7 -11 0 -22 q-6 -9 1 -14"/>
+              <path class="steam s3" d="M135 46 q6 -10 0 -20 q-5 -8 1 -14"/>
+            </g>
+            <path id="cupBody" d="M52 70 L72 268 q38 14 76 0 L168 70 Z" fill="#f3e5d0" stroke="#00000026" stroke-width="1.5"/>
+            <path id="cupShade" d="M52 70 L72 268 q38 14 76 0 L168 70 Z" fill="url(#shadeGrad)"/>
+            <ellipse id="cupRim" cx="110" cy="70" rx="58" ry="11" fill="#fffdf8" stroke="#00000026"/>
+            <ellipse id="coffeeTop" cx="110" cy="70" rx="50" ry="8.5" fill="#6b4226"/>
+            <g id="iceG">
+              <rect x="92" y="62" width="14" height="12" rx="3" fill="#fff" opacity=".85" transform="rotate(-12 99 68)"/>
+              <rect x="116" y="63" width="13" height="11" rx="3" fill="#fff" opacity=".72" transform="rotate(9 122 68)"/>
+            </g>
+            <text id="cupText" x="110" y="182" text-anchor="middle" font-weight="700"></text>
+            <text id="cupBrand" x="110" y="244" text-anchor="middle" font-size="9" letter-spacing="2.5" opacity=".45" font-weight="600">COFFEE LAB</text>
+            <g id="lidG">
+              <path id="lidDome" d="M58 62 Q110 18 162 62 Z" fill="#efe9df" stroke="#00000026"/>
+              <rect x="46" y="58" width="128" height="16" rx="8" fill="#e6dfd2" stroke="#00000026"/>
+              <rect id="sipHole" x="132" y="40" width="16" height="7" rx="3.5" fill="#4c4238"/>
+            </g>
+            <g id="strawG">
+              <rect id="strawRect" x="128" y="4" width="12" height="62" rx="5" transform="rotate(14 134 35)" fill="#f3f1ec" stroke="#00000022"/>
+              <rect id="strawStripe" x="128" y="4" width="12" height="62" rx="5" transform="rotate(14 134 35)" fill="url(#strawStripes)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="price-card">
+          <h3>ფასი</h3>
+          <div id="priceLines"></div>
+          <div class="price-total"><span>ჯამი</span><b id="priceTotal">0 ₾</b></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>ყავის ლაბი · Coffee Lab — მოხარშულია სიყვარულით ❤</span>
+</footer>
+
+<!-- მოდალი -->
+<div class="modal-backdrop hidden" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" tabindex="-1">
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script src="shared.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+/* ================= ცვლადები და საბაზო ================= */
+:root{
+  --bg:#f6f1e7;
+  --card:#fffdf8;
+  --ink:#2f2118;
+  --muted:#7d6b5c;
+  --accent:#8a5a34;
+  --accent-dark:#6e4526;
+  --accent-2:#c98d4b;
+  --line:#e7dccb;
+  --good:#3f7d4e;
+  --gold:#d4af37;
+  --paper:#f7f0dd;
+  --shadow:0 6px 24px rgba(74,47,29,.08);
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans Georgian','Sylfaen',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(201,141,75,.07), transparent 34%),
+    radial-gradient(circle at 88% 90%, rgba(138,90,52,.06), transparent 40%),
+    var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+button{font-family:inherit;cursor:pointer}
+input,output,textarea,select{font-family:inherit}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2.5px solid var(--accent-2);outline-offset:2px;
+}
+.modal:focus{outline:none}
+.hidden{display:none !important}
+main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:24px 20px 48px}
+
+/* ================= ზედა ზოლი ================= */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:20px;
+  padding:10px 24px;
+  background:rgba(255,253,248,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--ink)}
+.brand-text{display:flex;flex-direction:column;text-align:left;line-height:1.15}
+.brand-text strong{font-size:17px;font-weight:800}
+.brand-text small{font-size:10px;letter-spacing:2.5px;color:var(--muted)}
+.topnav{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.nav-btn{
+  border:1px solid transparent;background:none;border-radius:99px;
+  padding:8px 16px;font-size:14px;font-weight:600;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.nav-btn:hover{background:#f1e8d8}
+.nav-btn.active{background:var(--accent);color:#fff7ec;border-color:var(--accent)}
+.badge{
+  background:var(--gold);color:#4a3410;border-radius:99px;
+  font-size:11px;font-weight:800;padding:1px 7px;min-width:20px;text-align:center;
+}
+.user-chip{
+  display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;
+  background:#f1e8d8;border-radius:99px;padding:4px 14px 4px 4px;cursor:pointer;
+}
+.user-chip .uc-name{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avatar{
+  width:30px;height:30px;border-radius:50%;background:var(--accent);
+  color:#fff7ec;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:800;
+}
+
+/* ================= ნაბიჯები ================= */
+.steps{
+  display:flex;gap:6px;list-style:none;margin:4px 0 22px;
+  counter-reset:step;
+}
+.steps li{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:11px 8px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+  color:var(--muted);font-size:14px;font-weight:600;
+  cursor:pointer;transition:.18s;
+}
+.steps li .num{
+  width:24px;height:24px;border-radius:50%;
+  background:#efe5d2;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:800;
+}
+.steps li.active{border-color:var(--accent);color:var(--accent-dark);background:#fff}
+.steps li.active .num{background:var(--accent);color:#fff7ec}
+.steps li.done{color:var(--good)}
+.steps li.done .num{background:var(--good);color:#fff}
+
+/* ================= ვიზარდის განლაგება ================= */
+.wizard{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+.panels{min-width:0}
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:26px 28px 22px;
+}
+.panel h2{font-size:21px;font-weight:800;margin-bottom:16px}
+.opt-title{font-size:14px;font-weight:700;margin:20px 0 10px;color:var(--accent-dark)}
+.opt-title:first-of-type{margin-top:8px}
+.hint{font-size:12px;color:var(--muted);font-weight:500}
+.opt-row{display:flex;flex-wrap:wrap;gap:8px 26px}
+.opt-col{flex:1;min-width:170px}
+
+/* ყავის ბარათები */
+.coffee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.coffee-card{
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  border:1.5px solid var(--line);border-radius:14px;background:#fff;
+  padding:12px 13px;text-align:left;transition:.15s;
+}
+.coffee-card:hover{border-color:var(--accent-2);transform:translateY(-1px)}
+.coffee-card.selected{border-color:var(--accent);background:#fbf3e6;box-shadow:0 0 0 3px rgba(138,90,52,.13)}
+.cc-name{font-size:14.5px;font-weight:800}
+.cc-desc{font-size:11.5px;color:var(--muted);line-height:1.45;min-height:33px}
+.cc-price{font-size:13px;font-weight:800;color:var(--accent)}
+
+/* ჩიპები */
+.chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  display:flex;align-items:center;gap:7px;
+  border:1.5px solid var(--line);border-radius:99px;background:#fff;
+  padding:8px 15px;font-size:13.5px;font-weight:600;color:var(--ink);
+  transition:.15s;
+}
+.chip:hover{border-color:var(--accent-2)}
+.chip.selected{background:var(--accent);border-color:var(--accent);color:#fff7ec}
+.chip .chip-sub{font-size:11px;color:var(--muted);font-weight:500}
+.chip.selected .chip-sub{color:#f9ead6}
+.chip .chip-price{font-size:11.5px;font-weight:700;color:var(--accent)}
+.chip.selected .chip-price{color:#ffe9c9}
+
+/* შაქრის სლაიდერი */
+.sugar-row{display:flex;align-items:center;gap:16px;max-width:420px}
+.sugar-row input[type=range]{flex:1;accent-color:var(--accent);height:22px}
+.sugar-row output{font-size:14px;font-weight:700;color:var(--accent-dark);min-width:110px}
+
+/* ფერის არჩევა */
+.swatch-row{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
+.swatches{display:flex;flex-wrap:wrap;gap:9px}
+.swatch{
+  width:38px;height:38px;border-radius:50%;border:2px solid rgba(0,0,0,.12);
+  transition:.15s;position:relative;
+}
+.swatch:hover{transform:scale(1.1)}
+.swatch.selected{box-shadow:0 0 0 3px var(--card),0 0 0 6px var(--accent)}
+.custom-color{
+  display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;
+}
+.custom-color input[type=color]{
+  width:38px;height:38px;border:none;border-radius:50%;overflow:hidden;
+  background:none;cursor:pointer;padding:0;
+}
+.custom-color input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.custom-color input[type=color]::-webkit-color-swatch{border-radius:50%;border:2px dashed rgba(0,0,0,.25)}
+
+/* ტექსტის ველი */
+.text-input{
+  width:100%;max-width:420px;
+  border:1.5px solid var(--line);border-radius:12px;background:#fff;
+  padding:11px 14px;font-size:15px;color:var(--ink);outline:none;transition:.15s;
+}
+.text-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(138,90,52,.12)}
+#cupTextCount{margin-top:6px}
+
+/* პანელის ნავიგაცია */
+.panel-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.btn{
+  border:none;border-radius:12px;padding:12px 22px;
+  font-size:14.5px;font-weight:700;transition:.15s;
+}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.btn.primary{background:var(--accent);color:#fff7ec}
+.btn.primary:hover{background:var(--accent-dark)}
+.btn.primary.big{font-size:16px;padding:14px 28px}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--accent-2);color:var(--accent-dark)}
+.btn.gold{background:var(--gold);color:#4a3410}
+.btn.gold:hover{filter:brightness(1.06)}
+
+/* ================= გვერდითი პანელი ================= */
+.sidebar{position:sticky;top:76px;display:flex;flex-direction:column;gap:16px}
+.preview-card,.price-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px 20px;
+}
+.preview-card h3,.price-card h3{font-size:14px;font-weight:800;color:var(--accent-dark);margin-bottom:8px}
+#cupSvg{width:100%;max-width:230px;display:block;margin:0 auto}
+#cupText{font-family:'Noto Sans Georgian','Sylfaen',system-ui,sans-serif}
+
+.steam{fill:none;stroke:#b9a893;stroke-width:4;stroke-linecap:round;opacity:.5;animation:steam 2.6s ease-in-out infinite}
+.steam.s2{animation-delay:.5s}
+.steam.s3{animation-delay:1s}
+@keyframes steam{
+  0%,100%{opacity:.12;transform:translateY(2px)}
+  50%{opacity:.55;transform:translateY(-3px)}
+}
+
+#priceLines{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.price-line{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
+.price-line b{color:var(--ink);font-weight:700;white-space:nowrap}
+.price-total{
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1.5px dashed var(--line);padding-top:10px;font-size:15px;font-weight:700;
+}
+.price-total b{font-size:20px;color:var(--accent-dark)}
+
+/* ================= შეჯამება ================= */
+.sum-section{margin-bottom:18px}
+.sum-section h3{font-size:14px;font-weight:800;color:var(--accent-dark);margin-bottom:8px}
+.sum-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.sum-table td{padding:7px 4px;border-bottom:1px solid #f0e8d8;vertical-align:top}
+.sum-table td:first-child{color:var(--muted);width:38%}
+.sum-table td:last-child{font-weight:600}
+.color-dot{
+  display:inline-block;width:15px;height:15px;border-radius:50%;
+  border:1.5px solid rgba(0,0,0,.15);vertical-align:-2px;margin-right:6px;
+}
+.sum-price{
+  background:#fbf3e6;border-radius:12px;padding:14px 16px;margin-top:6px;
+}
+.sum-price .price-line{font-size:13.5px;padding:2px 0}
+.sum-price .price-total{border-top-color:#e2d3ba;margin-top:6px}
+
+/* ================= მოდალი ================= */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(47,33,24,.45);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.modal{
+  background:var(--card);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.25);
+  max-width:520px;width:100%;max-height:92vh;overflow-y:auto;
+  padding:30px 32px;animation:modalIn .25s ease;
+}
+@keyframes modalIn{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal h2{font-size:20px;font-weight:800;margin-bottom:4px}
+.modal .order-no{font-size:13px;color:var(--muted);margin-bottom:14px}
+.success-icon{
+  width:54px;height:54px;border-radius:50%;background:#e5f2e8;color:var(--good);
+  display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;
+}
+.modal-stamp{display:flex;justify-content:center;margin:14px 0}
+.modal-stamp .stamp-in{animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stampIn{
+  0%{transform:scale(2.4) rotate(-18deg);opacity:0}
+  55%{transform:scale(.93) rotate(2deg);opacity:1}
+  100%{transform:scale(1) rotate(0)}
+}
+.stamp-ghost{filter:grayscale(1);opacity:.45}
+.modal .divider{border:none;border-top:1.5px dashed var(--line);margin:18px 0}
+.modal .form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.modal .form-row label{font-size:12.5px;font-weight:700;color:var(--accent-dark)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn-row .btn{flex:1;min-width:140px}
+.privacy-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+
+/* ================= პასპორტი ================= */
+.pp-wrap{max-width:1020px;margin:0 auto}
+.pp-hero{text-align:center;margin-bottom:22px}
+.pp-hero h1{font-size:26px;font-weight:800}
+.pp-hero p{color:var(--muted);font-size:14px;margin-top:4px}
+
+/* დახურული ყდა (არარეგისტრირებულთათვის) */
+.pp-teaser{display:grid;grid-template-columns:300px 1fr;gap:34px;align-items:center;justify-content:center}
+.pp-cover{
+  width:300px;height:410px;border-radius:14px 20px 20px 14px;position:relative;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.07), transparent 55%),
+    linear-gradient(145deg,#24452f,#173021);
+  box-shadow:0 18px 44px rgba(23,48,33,.4), inset 0 0 0 2px rgba(212,175,55,.5), inset 0 0 0 10px transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  color:var(--gold);
+}
+.pp-cover::before{
+  content:'';position:absolute;inset:12px;border:1.5px solid rgba(212,175,55,.55);border-radius:10px;
+}
+.pp-cover .pp-title{font-size:21px;font-weight:800;letter-spacing:1px;text-align:center}
+.pp-cover .pp-sub{font-size:10.5px;letter-spacing:3px;opacity:.8}
+.pp-reg-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:28px 30px;max-width:440px;
+}
+.pp-reg-card h2{font-size:19px;font-weight:800;margin-bottom:8px}
+.pp-reg-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.pp-reg-card .form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.pp-reg-card label{font-size:12.5px;font-weight:700;color:var(--accent-dark)}
+.guest-note{
+  background:#fbf3e6;border:1px solid #ecd9b8;border-radius:10px;
+  padding:10px 13px;font-size:12.5px;color:var(--accent-dark);margin-bottom:14px;
+}
+
+/* გახსნილი პასპორტი */
+.pp-book{
+  display:grid;grid-template-columns:1fr 1.25fr;border-radius:18px;overflow:hidden;
+  box-shadow:0 20px 54px rgba(74,47,29,.18);
+  border:1px solid #d9cbb0;
+}
+.pp-page{
+  background:
+    repeating-linear-gradient(0deg, transparent 0 26px, rgba(138,90,52,.035) 26px 27px),
+    radial-gradient(circle at 50% 0%, rgba(212,175,55,.05), transparent 60%),
+    var(--paper);
+  padding:28px 30px;min-height:520px;
+}
+.pp-left{border-right:2px solid #d9cbb0;box-shadow:inset -18px 0 24px -18px rgba(74,47,29,.28)}
+.pp-right{box-shadow:inset 18px 0 24px -18px rgba(74,47,29,.28)}
+.pp-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.pp-header .pp-h-title{font-size:16px;font-weight:800;color:var(--accent-dark);line-height:1.25}
+.pp-header .pp-h-title small{display:block;font-size:9.5px;letter-spacing:2.5px;color:var(--muted);font-weight:600}
+.pp-photo{
+  width:86px;height:86px;border-radius:12px;background:var(--accent);
+  color:#fff7ec;font-size:30px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid #e2d3ba;margin-bottom:16px;
+}
+.pp-fields{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:13.5px;margin-bottom:18px}
+.pp-fields dt{color:var(--muted);font-size:12px;font-weight:600;padding-top:1px}
+.pp-fields dd{font-weight:700}
+.pp-stats{display:flex;gap:10px;margin-bottom:18px}
+.pp-stats div{
+  flex:1;background:#fff;border:1px solid #e7dbc2;border-radius:12px;
+  padding:10px 8px;text-align:center;
+}
+.pp-stats b{display:block;font-size:19px;color:var(--accent-dark)}
+.pp-stats span{font-size:11px;color:var(--muted);font-weight:600}
+.pp-rankbar{margin-bottom:18px}
+.pp-rankbar .rb-lbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:5px}
+.pp-rankbar .rb-track{height:8px;border-radius:99px;background:#e9decb;overflow:hidden}
+.pp-rankbar .rb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+.pp-collection h4{font-size:12.5px;font-weight:800;color:var(--accent-dark);margin-bottom:9px}
+.coll-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.coll-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:#fff;border:1px solid #e7dbc2;border-radius:10px;padding:8px 3px 6px;
+}
+.coll-item span{font-size:9.5px;font-weight:600;color:var(--muted);text-align:center}
+.coll-item.locked{opacity:.38;filter:grayscale(1)}
+.coll-item.tried{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.25)}
+
+.pp-right h3{font-size:15px;font-weight:800;color:var(--accent-dark);margin-bottom:4px}
+.pp-right .pp-r-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.stamps-grid{display:flex;flex-wrap:wrap;gap:14px;align-content:flex-start}
+.stamps-grid svg.stamp{mix-blend-mode:multiply}
+.pp-empty{
+  text-align:center;color:var(--muted);font-size:14px;padding:60px 20px;line-height:1.7;
+}
+.pp-actions{display:flex;justify-content:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+
+/* ================= ტოსტი და ფუტერი ================= */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:var(--ink);color:#fff7ec;font-size:13.5px;font-weight:600;
+  padding:11px 20px;border-radius:99px;opacity:0;pointer-events:none;
+  transition:.25s;z-index:200;max-width:90vw;
+}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.footer{
+  text-align:center;color:var(--muted);font-size:12px;
+  padding:18px;border-top:1px solid var(--line);
+}
+
+/* ================= შიდა გვერდები: შესახებ / კონტაქტი ================= */
+a.brand{text-decoration:none;color:inherit}
+a.nav-btn{text-decoration:none}
+.page-narrow{max-width:860px;margin:0 auto}
+.page-hero{text-align:center;margin:10px 0 26px}
+.page-hero h1{font-size:26px;font-weight:800}
+.page-hero p{color:var(--muted);font-size:14.5px;margin-top:6px}
+.page-section{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:26px 28px;margin-bottom:20px;
+}
+.page-section h2{font-size:18px;font-weight:800;color:var(--accent-dark);margin-bottom:10px}
+.page-section p{font-size:14px;line-height:1.75}
+.page-section p + p{margin-top:10px}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
+.value-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.value-card .vc-emoji{font-size:26px;line-height:1}
+.value-card h3{font-size:14.5px;font-weight:800;margin:9px 0 5px}
+.value-card p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.stat-row div{flex:1;min-width:120px;background:#fbf3e6;border-radius:12px;padding:14px;text-align:center}
+.stat-row b{display:block;font-size:22px;color:var(--accent-dark)}
+.stat-row span{font-size:12px;color:var(--muted);font-weight:600}
+.how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:14px}
+.how-step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.how-step .hs-num{
+  width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff7ec;
+  font-weight:800;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px;
+}
+.how-step h3{font-size:14px;font-weight:800;margin-bottom:6px}
+.how-step p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.page-cta{text-align:center;margin:26px 0 10px}
+.page-cta .btn{display:inline-block;text-decoration:none}
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}
+.info-list{list-style:none;display:flex;flex-direction:column;gap:15px;font-size:14px}
+.info-list li{display:flex;gap:12px;align-items:flex-start}
+.info-list .il-icon{font-size:20px;line-height:1.3}
+.info-list b{display:block;font-size:13px;color:var(--accent-dark);margin-bottom:2px}
+.info-list span{color:var(--muted);font-size:13px;line-height:1.6}
+.hours-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+.hours-table td{padding:7px 4px;border-bottom:1px solid #f0e8d8}
+.hours-table tr:last-child td{border-bottom:none}
+.hours-table td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.contact-form .form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.contact-form label{font-size:12.5px;font-weight:700;color:var(--accent-dark)}
+textarea.text-input{resize:vertical;min-height:110px}
+.social-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.social-row a,.social-row span{
+  display:flex;align-items:center;gap:7px;
+  border:1.5px solid var(--line);border-radius:99px;padding:8px 15px;
+  font-size:13px;font-weight:700;color:var(--accent-dark);text-decoration:none;transition:.15s;
+}
+.social-row a:hover{border-color:var(--accent-2);background:#fbf3e6}
+.social-row span{color:var(--muted)}
+@media (max-width:760px){
+  .contact-grid{grid-template-columns:1fr}
+}
+
+/* ================= ადაპტიური ================= */
+@media (max-width:920px){
+  .wizard{grid-template-columns:1fr}
+  .sidebar{position:static;flex-direction:row;flex-wrap:wrap}
+  .preview-card,.price-card{flex:1;min-width:260px}
+  .pp-teaser{grid-template-columns:1fr;justify-items:center}
+  .pp-book{grid-template-columns:1fr}
+  .pp-left{border-right:none;border-bottom:2px solid #d9cbb0;box-shadow:none;min-height:auto}
+  .pp-right{box-shadow:none}
+}
+@media (max-width:560px){
+  .topbar{padding:8px 12px;gap:8px}
+  .brand-text small{display:none}
+  .user-chip .uc-name{max-width:80px}
+  /* ვიწრო ეკრანზე მენიუ ერთი გადასრიალებადი რიგია — თავსართი დაბალი რჩება */
+  .topnav{gap:4px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;
+    scrollbar-width:none;-ms-overflow-style:none}
+  .topnav::-webkit-scrollbar{display:none}
+  .nav-btn{padding:7px 10px;font-size:12.5px;white-space:nowrap;flex:0 0 auto}
+  main{padding:16px 12px 40px}
+  .panel{padding:20px 16px}
+  .steps li .lbl{display:none}
+  .modal{padding:22px 18px}
+}

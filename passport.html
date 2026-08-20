@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ყავის პასპორტი — ყავის ლაბი</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 44 44" width="38" height="38" aria-hidden="true">
+      <circle cx="22" cy="22" r="20" fill="#8a5a34"/>
+      <g transform="rotate(-24 22 22)">
+        <ellipse cx="22" cy="22" rx="8" ry="12" fill="#f6f1e7"/>
+        <path d="M22 10 q7 12 0 24" fill="none" stroke="#8a5a34" stroke-width="2.4" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <span class="brand-text"><strong>ყავის ლაბი</strong><small>COFFEE LAB</small></span>
+  </a>
+  <nav class="topnav">
+    <a class="nav-btn" href="index.html">☕ შეკვეთა</a>
+    <a class="nav-btn active" href="passport.html">📖 პასპორტი <span class="badge hidden" id="stampBadge"></span></a>
+    <a class="nav-btn" href="about.html">👋 ჩვენს შესახებ</a>
+    <a class="nav-btn" href="contact.html">📍 კონტაქტი</a>
+  </nav>
+  <div class="user-chip hidden" id="userChip"></div>
+</header>
+
+<main>
+  <section id="view-passport"></section>
+</main>
+
+<footer class="footer">
+  <span>ყავის ლაბი · Coffee Lab — მოხარშულია სიყვარულით ❤</span>
+</footer>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script src="shared.js"></script>
+<script src="passport.js"></script>
+</body>
+</html>
