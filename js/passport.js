@@ -2,7 +2,12 @@
 
 /* პასპორტის გვერდი — საერთო კოდი shared.js-შია (ჩაიტვირთოს მანამდე) */
 
+/* რა მდგომარეობაზეა დახატული გვერდი — ცვლილებისას (bfcache, სხვა ჩანართი) თავიდან იხატება */
+let renderedSig = null;
+const dataSig = () => JSON.stringify([user && user.id, orders.length]);
+
 function renderPassportPage() {
+  renderedSig = dataSig();
   const v = $('#view-passport');
 
   if (!user) {
@@ -22,7 +27,7 @@ function renderPassportPage() {
               </g>
             </svg>
             <div class="pp-title">ყავის<br>პასპორტი</div>
-            <div class="pp-sub">COFFEE LAB · PASSPORT</div>
+            <div class="pp-sub">COFFY LAB · PASSPORT</div>
           </div>
           <div class="pp-reg-card">
             <h2>გახსენი შენი პასპორტი ✦</h2>
@@ -36,6 +41,7 @@ function renderPassportPage() {
               <label for="ppEmail">ელფოსტა (არასავალდებულო)</label>
               <input type="email" id="ppEmail" class="text-input" maxlength="80" placeholder="nino@example.com" autocomplete="off">
             </div>
+            ${store.persistent ? '' : '<div class="guest-note">⚠ ბრაუზერი შენახვას არ უშვებს — პასპორტი მხოლოდ ამ ჩანართში იმუშავებს.</div>'}
             <div class="btn-row">
               <button type="button" class="btn gold" id="ppRegister">პასპორტის შექმნა ✦</button>
             </div>
@@ -84,7 +90,7 @@ function renderPassportPage() {
         <div class="pp-page pp-left">
           <div class="pp-header">
             ${emblemSVG}
-            <div class="pp-h-title">ყავის ლაბი<small>COFFEE LAB · PASSPORT</small></div>
+            <div class="pp-h-title">ყავის ლაბი<small>COFFY LAB · PASSPORT</small></div>
           </div>
           <div class="pp-photo">${esc(initials)}</div>
           <dl class="pp-fields">
@@ -125,4 +131,14 @@ function renderPassportPage() {
     </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', renderPassportPage);
+document.addEventListener('DOMContentLoaded', () => {
+  renderPassportPage();
+  if (!store.persistent) {
+    toast('⚠ ბრაუზერი შენახვას არ უშვებს — მონაცემები მხოლოდ ამ სესიაში დარჩება');
+  }
+});
+
+// shared.js აახლებს user/orders-ს bfcache-დან დაბრუნებისას ან სხვა ჩანართის ცვლილებაზე
+document.addEventListener('cl:datachanged', () => {
+  if (dataSig() !== renderedSig) renderPassportPage();
+});

@@ -154,15 +154,21 @@ function rankFor(n) { let r = RANKS[0]; for (const x of RANKS) if (n >= x.min) r
 function nextRank(n) { return RANKS.find(x => x.min > n) || null; }
 
 /* ---------- შენახული მონაცემები + ვალიდაცია ---------- */
-let user = store.get('cl_user');
-if (!user || typeof user.name !== 'string' || !user.name.trim() || typeof user.since !== 'number') user = null;
+let user = null;
+let orders = [];
 
-let orders = store.get('cl_orders');
-if (!Array.isArray(orders)) orders = [];
-orders = orders.filter(o =>
-  o && typeof o === 'object' &&
-  o.coffee && typeof o.coffee.typeId === 'string' &&
-  typeof o.date === 'number' && typeof o.no === 'number');
+function reloadStoredData() {
+  user = store.get('cl_user');
+  if (!user || typeof user.name !== 'string' || !user.name.trim() || typeof user.since !== 'number') user = null;
+
+  let o = store.get('cl_orders');
+  if (!Array.isArray(o)) o = [];
+  orders = o.filter(x =>
+    x && typeof x === 'object' &&
+    x.coffee && typeof x.coffee.typeId === 'string' &&
+    typeof x.date === 'number' && typeof x.no === 'number');
+}
+reloadStoredData();
 
 /* ---------- რეგისტრაცია ---------- */
 function registerUser(name, email) {
@@ -170,10 +176,13 @@ function registerUser(name, email) {
   email = String(email || '').trim();
   if (!name) return { ok: false, error: 'შეიყვანე სახელი 🙂' };
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, error: 'ელფოსტის ფორმატი არასწორია' };
+  // თუ სხვა ჩანართში პასპორტი უკვე შექმნილია, იდენტობა (№, გაცემის თარიღი) არ უნდა შეიცვალოს
+  const existing = store.get('cl_user');
+  const keepIdentity = existing && typeof existing.id === 'string' && typeof existing.since === 'number';
   user = {
     name, email,
-    id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
-    since: Date.now(),
+    id: keepIdentity ? existing.id : 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+    since: keepIdentity ? existing.since : Date.now(),
   };
   store.set('cl_user', user);
   renderTopbarUser();
@@ -306,3 +315,16 @@ function renderTopbarUser() {
 }
 
 document.addEventListener('DOMContentLoaded', renderTopbarUser);
+
+/* ---------- მონაცემების განახლება bfcache-დან დაბრუნებისას და სხვა ჩანართიდან ---------- */
+function refreshSharedData() {
+  reloadStoredData();
+  renderTopbarUser();
+  // გვერდის სკრიპტებს შეუძლიათ ამ ივენთზე საკუთარი ხედი გადახატონ
+  document.dispatchEvent(new CustomEvent('cl:datachanged'));
+}
+
+window.addEventListener('pageshow', e => { if (e.persisted) refreshSharedData(); });
+window.addEventListener('storage', e => {
+  if (e.key === 'cl_user' || e.key === 'cl_orders') refreshSharedData();
+});
