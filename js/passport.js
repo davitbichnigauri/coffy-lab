@@ -27,7 +27,7 @@ function renderPassportPage() {
               </g>
             </svg>
             <div class="pp-title">ყავის<br>პასპორტი</div>
-            <div class="pp-sub">COFFEE LAB · PASSPORT</div>
+            <div class="pp-sub">COFFY LAB · PASSPORT</div>
           </div>
           <div class="pp-reg-card">
             <h2>გახსენი შენი პასპორტი ✦</h2>
@@ -90,7 +90,7 @@ function renderPassportPage() {
         <div class="pp-page pp-left">
           <div class="pp-header">
             ${emblemSVG}
-            <div class="pp-h-title">ყავის ლაბი<small>COFFEE LAB · PASSPORT</small></div>
+            <div class="pp-h-title">ყავის ლაბი<small>COFFY LAB · PASSPORT</small></div>
           </div>
           <div class="pp-photo">${esc(initials)}</div>
           <dl class="pp-fields">
