@@ -12,6 +12,42 @@ const defaultState = () => ({
 
 let state = defaultState();
 
+/* მიმდინარე შეკვეთა გვერდებს შორის ნავიგაციას უძლებს (sessionStorage — ჩანართზეა მიბმული) */
+const WSTATE_KEY = 'cl_wizard';
+
+function saveWizardState() {
+  try { sessionStorage.setItem(WSTATE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+function loadWizardState() {
+  let s = null;
+  try { s = JSON.parse(sessionStorage.getItem(WSTATE_KEY)); } catch (e) {}
+  if (!s || !s.coffee || !s.cup) return;
+  const d = defaultState();
+  const c = s.coffee, k = s.cup;
+  const step = [1, 2, 3].includes(s.step) ? s.step : 1;
+  state = {
+    step,
+    maxStep: Math.max(step, [1, 2, 3].includes(s.maxStep) ? s.maxStep : 1),
+    coffee: {
+      typeId: coffeeById(c.typeId) ? c.typeId : d.coffee.typeId,
+      volume: VOLUMES.some(x => x.id === c.volume) ? c.volume : d.coffee.volume,
+      shots:  SHOTS.some(x => x.id === c.shots)   ? c.shots  : d.coffee.shots,
+      temp:   TEMPS.some(x => x.id === c.temp)    ? c.temp   : d.coffee.temp,
+      milk:   MILKS.some(x => x.id === c.milk)    ? c.milk   : d.coffee.milk,
+      syrups: Array.isArray(c.syrups) ? c.syrups.filter(id => SYRUPS.some(x => x.id === id)) : [],
+      extras: Array.isArray(c.extras) ? c.extras.filter(id => EXTRAS.some(x => x.id === id)) : [],
+      sugar:  Number.isInteger(c.sugar) && c.sugar >= 0 && c.sugar <= 5 ? c.sugar : d.coffee.sugar,
+    },
+    cup: {
+      color: typeof k.color === 'string' && /^#[0-9a-f]{6}$/i.test(k.color) ? k.color : d.cup.color,
+      text:  typeof k.text === 'string' ? k.text.slice(0, 18) : '',
+      lid:   LIDS.some(x => x.id === k.lid)     ? k.lid   : d.cup.lid,
+      straw: STRAWS.some(x => x.id === k.straw) ? k.straw : d.cup.straw,
+    },
+  };
+}
+
 /* ================= ფასის დათვლა ================= */
 function priceLines() {
   const t   = coffeeById(state.coffee.typeId);
@@ -224,12 +260,14 @@ function showStep(n) {
     li.classList.toggle('done', s < n);
   });
   if (n === 3) renderSummary();
+  saveWizardState();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ================= შეკვეთა ================= */
 function placeOrder() {
   if (!$('#modal').classList.contains('hidden')) return; // Enter-ის გამეორება დუბლიკატს არ ქმნის
+  reloadStoredData(); // ნომერი უახლესი სიიდან — სხვა ჩანართის შეკვეთები არ დაიკარგოს
   const { total } = priceLines();
   const order = {
     id: 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
@@ -247,6 +285,7 @@ function placeOrder() {
 
 function resetOrder() {
   state = defaultState();
+  try { sessionStorage.removeItem(WSTATE_KEY); } catch (e) {}
   syncStaticInputs();
   refresh();
   showStep(1);
@@ -288,7 +327,8 @@ function showSuccessModal(order) {
         <a class="btn gold" href="passport.html">პასპორტის ნახვა 📖</a>
         <button type="button" class="btn ghost" id="mNewOrder">ახალი შეკვეთა</button>
       </div>`;
-    $('#mNewOrder').addEventListener('click', () => { closeModal(); resetOrder(); });
+    // ჯერ resetOrder — დამალული ღილაკი ფოკუსს ვეღარ მიიღებს და ის ნავიგაციას გადაეცემა
+    $('#mNewOrder').addEventListener('click', () => { resetOrder(); closeModal(); });
   } else {
     mc.innerHTML = `
       ${head}
@@ -314,7 +354,8 @@ function showSuccessModal(order) {
       <p class="privacy-note">მონაცემები ინახება მხოლოდ შენს ბრაუზერში — სერვერზე არაფერი იგზავნება.</p>`;
     $('#mRegister').addEventListener('click', () => registerFrom('#regName', '#regEmail', order));
     $('#regName').addEventListener('keydown', e => { if (e.key === 'Enter') registerFrom('#regName', '#regEmail', order); });
-    $('#mSkip').addEventListener('click', () => { closeModal(); resetOrder(); });
+    $('#regEmail').addEventListener('keydown', e => { if (e.key === 'Enter') registerFrom('#regName', '#regEmail', order); });
+    $('#mSkip').addEventListener('click', () => { resetOrder(); closeModal(); });
   }
   openModal();
 }
@@ -335,7 +376,7 @@ function registerFrom(nameSel, emailSel, order) {
       <a class="btn gold" href="passport.html">პასპორტის ნახვა 📖</a>
       <button type="button" class="btn ghost" id="mNewOrder">ახალი შეკვეთა</button>
     </div>`;
-  $('#mNewOrder').addEventListener('click', () => { closeModal(); resetOrder(); });
+  $('#mNewOrder').addEventListener('click', () => { resetOrder(); closeModal(); });
   $('#modal .modal').focus();
 }
 
@@ -348,6 +389,7 @@ function refresh() {
   renderPreview();
   renderPrice();
   if (state.step === 3) renderSummary();
+  saveWizardState();
 }
 
 function syncStaticInputs() {
@@ -370,18 +412,21 @@ function init() {
   $('#sugarRange').addEventListener('input', e => {
     state.coffee.sugar = Number(e.target.value);
     renderSugar();
+    saveWizardState();
   });
 
   $('#cupTextInput').addEventListener('input', e => {
     state.cup.text = e.target.value;
     $('#cupTextCount').textContent = `${e.target.value.length} / 18 სიმბოლო`;
     renderPreview();
+    saveWizardState();
   });
 
   $('#customColor').addEventListener('input', e => {
     state.cup.color = e.target.value;
     renderSwatches();
     renderPreview();
+    saveWizardState();
   });
 
   $('#toStep2').addEventListener('click', () => showStep(2));
@@ -411,8 +456,8 @@ function init() {
         toast('ფორმის დახურვისთვის დააჭირე „გამოტოვებას“ 🙂');
         return;
       }
-      closeModal();
       resetOrder();
+      closeModal();
     } else if (e.key === 'Tab') {
       // ფოკუსი მოდალშივე რჩება
       const els = $$('button, input, a[href]', $('#modal')).filter(el => !el.disabled && el.offsetParent !== null);
@@ -429,10 +474,11 @@ function init() {
     }
   });
 
+  loadWizardState();     // ნავიგაციის შემდეგ დაბრუნებულს მიმდინარე შეკვეთა ხვდება
   syncStaticInputs();
   renderTopbarUser();
   refresh();
-  showStep(1);
+  showStep(state.step);
 }
 
 document.addEventListener('DOMContentLoaded', init);
